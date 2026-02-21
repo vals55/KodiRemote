@@ -48,6 +48,26 @@ String getMacAddressHex() {
 	return String(baseMacChr);
 }
 
+uint8_t hexToByte(const char *hex) {
+	return (uint8_t)strtol(hex, NULL, 16);
+}
+
+void hexStringToBytes(const char* hexString, uint8_t* byteArray, int arraySize) {
+    for (int i = 0; i < arraySize; i++) {
+        char temp[3] = {0}; 
+        temp[0] = hexString[i * 2 + i];
+        temp[1] = hexString[i * 2 + i + 1];
+        //temp[2] = '\\0';
+        byteArray[i] = hexToByte(temp);
+    }
+}
+
+String getBssidToString(uint8_t* bssid) {
+	char baseMacChr[18] = {0};
+	sprintf(baseMacChr, MAC_STR, bssid[0], bssid[1], bssid[2], bssid[3], bssid[4], bssid[5]);
+	return String(baseMacChr);
+}
+
 bool isDHCP(const BoardConfig &conf) {
 	return conf.ip != 0;
 }

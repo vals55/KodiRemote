@@ -121,11 +121,11 @@ bool wifiConnect(BoardConfig &conf) {
       conf.wifi_channel = WiFi.channel(); // сохраняем для быстрого коннекта
       uint8_t *bssid = WiFi.BSSID();
       memcpy((void *)&conf.wifi_bssid, (void *)bssid, sizeof(conf.wifi_bssid)); // сохраняем для быстрого коннекта
-      // rlog_i("info", "WIFI: Connected.");
-      // rlog_i("info", "WIFI: SSID: %s", WiFi.SSID().c_str());
-      // rlog_i("info", "WIFI: Channel: %d", WiFi.channel());
-      // rlog_i("info", "WIFI: BSSID: %s", WiFi.BSSIDstr().c_str());
-      // rlog_i("info", "WIFI: Time spent %d ms", millis() - start_time);
+      rlog_i("info", "WIFI: Connected.");
+      rlog_i("info", "WIFI: SSID: %s", WiFi.SSID().c_str());
+      rlog_i("info", "WIFI: Channel: %d", WiFi.channel());
+      rlog_i("info", "WIFI: BSSID: %s", WiFi.BSSIDstr().c_str());
+      rlog_i("info", "WIFI: Time spent %d ms", millis() - start_time);
       return true;
     }
     conf.wifi_channel = 0;

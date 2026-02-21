@@ -37,6 +37,7 @@ struct BoardConfig {
   char password[PASSW_LEN] = {0};
   char url[KODI_HOST_LEN] = {0};
   char MAC[18] = {0};
+  char bssid[18] = {0};
 
   uint32_t ip;
   uint32_t gateway;
