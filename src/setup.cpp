@@ -48,6 +48,8 @@ void startAP(BoardConfig &conf) {
       wifi_station_set_config(&sconf);
   }
 
+  wm.setRemoveDuplicateAPs(false);
+   
   WiFiManagerParameter subtitle_kodi("<h3>KODI</h3>");
   wm.addParameter(&subtitle_kodi);
 
