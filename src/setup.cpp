@@ -58,7 +58,7 @@ void startAP(BoardConfig &conf) {
   wm.addParameter(&param_kodi_mac);
   
 //extra conf ------------------------------------------------------------------------------------
-  WiFiManagerParameter checkbox("<label class='chk-box'>Расширенные настройки<input type='checkbox' id='chbox' name='chbox' onclick='extraConf()'><span class='box'></span></label>");
+  WiFiManagerParameter checkbox("<input type='checkbox' id='chbox' name='chbox' onclick='extraConf()'><label for='chbox'>Расширенные настройки</label>");
   wm.addParameter(&checkbox);
   WiFiManagerParameter div_start("<div id='extra_conf' style='display:none'>");
   wm.addParameter(&div_start);
