@@ -38,8 +38,9 @@ void startAP(BoardConfig &conf) {
 
   if (conf.ssid[0]) {
       struct station_config sconf;
-      sconf.bssid_set = 0;
+      sconf.bssid_set = conf.bssid_set;
       memcpy(sconf.ssid, conf.ssid, sizeof(sconf.ssid));
+      memcpy(sconf.bssid, conf.wifi_bssid, sizeof(sconf.bssid));
       if (conf.password[0]) {
           memcpy(sconf.password, conf.password, sizeof(sconf.password));
       } else {
@@ -123,6 +124,8 @@ void startAP(BoardConfig &conf) {
     
   strncpy0(conf.ssid, wm.getWiFiSSID().c_str(), SSID_LEN);
   strncpy0(conf.password, wm.getWiFiPass().c_str(), PASSW_LEN);
+  strncpy0(conf.bssid, wm.getWiFiBSSID().c_str(), 18);
+  hexStringToBytes(conf.bssid, conf.wifi_bssid, sizeof(conf.wifi_bssid))
 
   strncpy0(conf.url, param_kodi_url.getValue(), KODI_HOST_LEN);
   strncpy0(conf.MAC, param_kodi_mac.getValue(), 18);

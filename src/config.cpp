@@ -31,6 +31,8 @@ bool loadConfig(BoardConfig &conf) {
         strncpy0(conf.url, kodi_url.c_str(), kodi_url.length() + 1);
         String mac(DEFAULT_KODI_MAC);
         strncpy0(conf.MAC, mac.c_str(), mac.length() + 1);
+        String bssid(17);
+        strncpy0(conf.bssid, bssid.c_str(), bssid.length() + 1);
 
         conf.ip = 0;
         IPAddress network_gateway;

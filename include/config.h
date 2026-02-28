@@ -43,6 +43,7 @@ struct BoardConfig {
   uint32_t gateway;
   uint32_t mask;
 
+  uint8 bssid_set;
   uint8_t wifi_bssid[6] = {0};
   uint8_t wifi_channel = 0;
   uint8_t wifi_phy_mode = 3;
