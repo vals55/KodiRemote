@@ -72,10 +72,18 @@ void wifiBegin(BoardConfig &conf) {
   delay(100); // подождем чтобы проинициализировалась сеть
 
   if (conf.wifi_channel) {
-    WiFi.begin(conf.ssid, conf.password, conf.wifi_channel, conf.wifi_bssid);
+    if(conf.bssid_set) {
+      WiFi.begin(conf.ssid, conf.password, conf.wifi_channel, conf.wifi_bssid);
+    } else {
+      WiFi.begin(conf.ssid, conf.password, conf.wifi_channel);
+    }
   }
   else {
-    WiFi.begin(conf.ssid, conf.password);
+    if(conf.bssid_set) {
+      WiFi.begin(conf.ssid, conf.password, 0, conf.wifi_bssid);
+    } else {
+      WiFi.begin(conf.ssid, conf.password);
+    }
   }
 
   WiFi.waitForConnectResult(ESP_CONNECT_TIMEOUT);
