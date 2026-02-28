@@ -125,7 +125,10 @@ void startAP(BoardConfig &conf) {
   strncpy0(conf.ssid, wm.getWiFiSSID().c_str(), SSID_LEN);
   strncpy0(conf.password, wm.getWiFiPass().c_str(), PASSW_LEN);
   strncpy0(conf.bssid, wm.getWiFiBSSID().c_str(), 18);
-  hexStringToBytes(conf.bssid, conf.wifi_bssid, sizeof(conf.wifi_bssid))
+  hexStringToBytes(conf.bssid, conf.wifi_bssid, sizeof(conf.wifi_bssid));
+
+  rlog_i("info Setup", "bssid = %s", conf.bssid);
+  rlog_i("info Setup", "_bssid = %s _bssid_set = %b", wm.arg_bssid(), wm.arg_bssid_set());
 
   strncpy0(conf.url, param_kodi_url.getValue(), KODI_HOST_LEN);
   strncpy0(conf.MAC, param_kodi_mac.getValue(), 18);

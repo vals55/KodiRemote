@@ -18,3 +18,5 @@ String getMacAddressHex();
 bool isDHCP(const BoardConfig &conf);
 String int2String(uint64_t input, uint8_t base);
 void getHost(String &url); 
+void hexStringToBytes(const char* hexString, uint8_t* byteArray, int arraySize);
+String getBssidToString(uint8_t* bssid);
