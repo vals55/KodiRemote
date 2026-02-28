@@ -71,17 +71,28 @@ void wifiBegin(BoardConfig &conf) {
 
   delay(100); // подождем чтобы проинициализировалась сеть
 
+rlog_i("info Begin", "bssid_set=%d ssid = %s password=%d channel=%d bssid=%s wifi_bssid = %s", 
+                                                                conf.bssid_set,
+                                                                conf.ssid,
+                                                                String(conf.password), 
+                                                                conf.wifi_channel, 
+                                                                conf.bssid, 
+                                                                getBssidToString(conf.wifi_bssid).c_str());
   if (conf.wifi_channel) {
     if(conf.bssid_set) {
+rlog_i("info Begin 1","");      
       WiFi.begin(conf.ssid, conf.password, conf.wifi_channel, conf.wifi_bssid);
     } else {
+rlog_i("info Begin 2","");      
       WiFi.begin(conf.ssid, conf.password, conf.wifi_channel);
     }
   }
   else {
     if(conf.bssid_set) {
+rlog_i("info Begin 3","");      
       WiFi.begin(conf.ssid, conf.password, 0, conf.wifi_bssid);
     } else {
+rlog_i("info Begin 4","");      
       WiFi.begin(conf.ssid, conf.password);
     }
   }

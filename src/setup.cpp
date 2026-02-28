@@ -38,9 +38,14 @@ void startAP(BoardConfig &conf) {
 
   if (conf.ssid[0]) {
       struct station_config sconf;
-      sconf.bssid_set = 0;  //conf.bssid_set;
+      sconf.bssid_set = conf.bssid_set;
       memcpy(sconf.ssid, conf.ssid, sizeof(sconf.ssid));
-      memcpy(sconf.bssid, conf.wifi_bssid, sizeof(sconf.bssid));
+      if(conf.wifi_bssid[0]) {
+        memcpy(sconf.bssid, conf.wifi_bssid, sizeof(sconf.bssid));
+      } else {
+        memset(sconf.bssid, 0, sizeof(sconf.bssid));
+        sconf.bssid_set = 0;
+      }
       if (conf.password[0]) {
           memcpy(sconf.password, conf.password, sizeof(sconf.password));
       } else {
@@ -48,6 +53,7 @@ void startAP(BoardConfig &conf) {
       }    
       wifi_station_set_config(&sconf);
   }
+  rlog_i("info StartAP", "conf.bssid = %s conf.wifi_bssid = %s conf.bssid_set = %d", conf.bssid, getBssidToString(conf.wifi_bssid).c_str(), conf.bssid_set);
 
   wm.setRemoveDuplicateAPs(false);
 
@@ -77,9 +83,9 @@ void startAP(BoardConfig &conf) {
 
   IPAddressParameter param_ip("ip", "Статический IP (оставьте 0.0.0.0 для DHCP):", IPAddress(conf.ip));
   wm.addParameter(&param_ip);
-  IPAddressParameter param_gateway("gateway", "Шлюз:", IPAddress(conf.gateway));
+  IPAddressParameter param_gateway("gw", "Шлюз:", IPAddress(conf.gateway));
   wm.addParameter(&param_gateway);
-  IPAddressParameter param_mask("mask", "Маска подсети:", IPAddress(conf.mask));
+  IPAddressParameter param_mask("sn", "Маска подсети:", IPAddress(conf.mask));
   wm.addParameter(&param_mask);
 
   WiFiManagerParameter label_phy_mode("<label>Режим работы WiFi:</label>");
@@ -124,13 +130,16 @@ void startAP(BoardConfig &conf) {
     
   strncpy0(conf.ssid, wm.getWiFiSSID().c_str(), SSID_LEN);
   strncpy0(conf.password, wm.getWiFiPass().c_str(), PASSW_LEN);
-  strncpy0(conf.bssid, wm.getWiFiBSSID().c_str(), 18);
+  strncpy0(conf.bssid, wm.arg_bssid().c_str(), 18);
   hexStringToBytes(conf.bssid, conf.wifi_bssid, sizeof(conf.wifi_bssid));
-  if(conf.bssid[0] != 0) {
+  if(wm.arg_bssid_set() == "1") {
     conf.bssid_set = 1;    
+  } else {
+    conf.bssid_set = 0;    
   }
-  rlog_i("info Setup", "bssid = %s", conf.bssid);
-  rlog_i("info Setup", "_bssid = %s _bssid_set = %s", wm.arg_bssid().c_str(), wm.arg_bssid().c_str());
+
+  rlog_i("info Setup", "bssid = %s wifi_bssid = %s", conf.bssid, getBssidToString(conf.wifi_bssid).c_str());
+  rlog_i("info Setup", "_bssid = %s _bssid_set = %s conf.bssid_set=%d", wm.arg_bssid().c_str(), wm.arg_bssid_set().c_str(), conf.bssid_set);
 
   strncpy0(conf.url, param_kodi_url.getValue(), KODI_HOST_LEN);
   strncpy0(conf.MAC, param_kodi_mac.getValue(), 18);

@@ -83,7 +83,7 @@ void Click() {
   }
   rlog_i("info Click", "Index = %d Count=%d", ndx, count);
 
-  if(ndx >= count-2) {                  //two last cmd
+  if((ndx >= count-2) || (ndx = 9)) {                  //two last cmd
     pinger.Ping(host, 1);
   } else if(ndx != -1) {                //cmd found
     Command(ndx);

@@ -25,7 +25,7 @@ const char *msg_rpc[] = {
 };
 
 const u_int8_t cmd[] {
-    0x0,  // Input.Home
+    0x0,   // Input.Home
     0x14,  // Input.Back
     0x82,  // Input.Down
     0x02,  // Input.Up
@@ -36,7 +36,7 @@ const u_int8_t cmd[] {
     0x98,  // Input.ContextMenu
     
     0x10,  // System.Shutdown,
-    0x0,  // System.Reboot
+    0x0,   // System.Reboot
     
     0x90,  // Application.SetMute
     0x40,  // Application.SetVolume
@@ -46,7 +46,7 @@ const u_int8_t cmd[] {
 };
 
 const u_int8_t cmd_magic[] {
-  0x0,  // Input.Home
+  0x0,   // Input.Home
   0x40,  // Input.Back
   0xF0,  // Input.Down
   0xD0,  // Input.Up
