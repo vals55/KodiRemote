@@ -42,6 +42,7 @@ struct BoardConfig {
   uint32_t ip;
   uint32_t gateway;
   uint32_t mask;
+  uint32_t dns;
 
   uint8 bssid_set;
   uint8_t wifi_bssid[6] = {0};

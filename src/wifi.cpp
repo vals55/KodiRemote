@@ -71,10 +71,11 @@ void wifiBegin(BoardConfig &conf) {
 
   delay(100); // подождем чтобы проинициализировалась сеть
 
-rlog_i("info Begin", "bssid_set=%d ssid = %s password=%d channel=%d bssid=%s wifi_bssid = %s", 
+rlog_i("info Begin", "bssid_set=%d ssid = %s password=%s channel=%d bssid=%s wifi_bssid = %s", 
                                                                 conf.bssid_set,
                                                                 conf.ssid,
                                                                 String(conf.password), 
+//                                                                String(reinterpret_cast<char*>(conf.password)), 
                                                                 conf.wifi_channel, 
                                                                 conf.bssid, 
                                                                 getBssidToString(conf.wifi_bssid).c_str());
@@ -147,7 +148,7 @@ bool wifiConnect(BoardConfig &conf) {
       rlog_i("info", "WIFI: Time spent %d ms", millis() - start_time);
       return true;
     }
-    conf.wifi_channel = 0;
+    // conf.wifi_channel = 0;
     rlog_i("info", "WIFI: Connection failed.");
   } while (--attempts);
   

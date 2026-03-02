@@ -49,11 +49,11 @@ void startAP(BoardConfig &conf) {
       if (conf.password[0]) {
           memcpy(sconf.password, conf.password, sizeof(sconf.password));
       } else {
-          sconf.password[0] = 0;
+          memset(sconf.password, 0, sizeof(sconf.password));
       }    
       wifi_station_set_config(&sconf);
   }
-  rlog_i("info StartAP", "conf.bssid = %s conf.wifi_bssid = %s conf.bssid_set = %d", conf.bssid, getBssidToString(conf.wifi_bssid).c_str(), conf.bssid_set);
+rlog_i("info StartAP", "conf.bssid=%s conf.wifi_bssid=%s conf.bssid_set=%d conf.passw=%s", conf.bssid, getBssidToString(conf.wifi_bssid).c_str(), conf.bssid_set, conf.password);
 
   wm.setRemoveDuplicateAPs(false);
 
@@ -87,6 +87,8 @@ void startAP(BoardConfig &conf) {
   wm.addParameter(&param_gateway);
   IPAddressParameter param_mask("sn", "Маска подсети:", IPAddress(conf.mask));
   wm.addParameter(&param_mask);
+  IPAddressParameter param_dns("dns", "Сервер DNS:", IPAddress(conf.dns));
+  wm.addParameter(&param_dns);
 
   WiFiManagerParameter label_phy_mode("<label>Режим работы WiFi:</label>");
   wm.addParameter(&label_phy_mode);
@@ -96,6 +98,25 @@ void startAP(BoardConfig &conf) {
   dropdown_phy_mode.add_option(2, "11g",  conf.wifi_phy_mode);
   dropdown_phy_mode.add_option(3, "11n",  conf.wifi_phy_mode);
   wm.addParameter(&dropdown_phy_mode);
+
+  WiFiManagerParameter label_channel("<label>Канал WiFi:</label>");
+  wm.addParameter(&label_channel);
+  DropdownParameter dropdown_channel("wifi_channel");
+  dropdown_channel.add_option(0, "Авто", conf.wifi_channel);
+  dropdown_channel.add_option(1, "1", conf.wifi_channel);
+  dropdown_channel.add_option(2, "2", conf.wifi_channel);
+  dropdown_channel.add_option(3, "3", conf.wifi_channel);
+  dropdown_channel.add_option(4, "4", conf.wifi_channel);
+  dropdown_channel.add_option(5, "5", conf.wifi_channel);
+  dropdown_channel.add_option(6, "6", conf.wifi_channel);
+  dropdown_channel.add_option(7, "7", conf.wifi_channel);
+  dropdown_channel.add_option(8, "8", conf.wifi_channel);
+  dropdown_channel.add_option(9, "9", conf.wifi_channel);
+  dropdown_channel.add_option(10,"10",conf.wifi_channel);
+  dropdown_channel.add_option(11,"11",conf.wifi_channel);
+  dropdown_channel.add_option(12,"12",conf.wifi_channel);
+  dropdown_channel.add_option(13,"13",conf.wifi_channel);
+  wm.addParameter(&dropdown_channel);
 
 //extra conf end---------------------------------------------------------------------------------
   WiFiManagerParameter div_end("</div>");
@@ -114,6 +135,8 @@ void startAP(BoardConfig &conf) {
   WiFi.setPhyMode(WIFI_PHY_MODE_11N);
   // set custom webserver port, automatic captive portal does not work with custom ports!
   // wm.setHttpPort(8080);
+  
+  //wm.setShowPassword(true);
 
   //bool result = wm.startConfigPortal(getAppName().c_str());
   // if (!wm.autoConnect(getAppName().c_str())) {
@@ -130,16 +153,20 @@ void startAP(BoardConfig &conf) {
     
   strncpy0(conf.ssid, wm.getWiFiSSID().c_str(), SSID_LEN);
   strncpy0(conf.password, wm.getWiFiPass().c_str(), PASSW_LEN);
+//  strncpy0(conf.password, wm.arg_password().c_str(), PASSW_LEN);
   strncpy0(conf.bssid, wm.arg_bssid().c_str(), 18);
   hexStringToBytes(conf.bssid, conf.wifi_bssid, sizeof(conf.wifi_bssid));
   if(wm.arg_bssid_set() == "1") {
     conf.bssid_set = 1;    
   } else {
-    conf.bssid_set = 0;    
+    conf.bssid_set = 0;
+    memset(conf.wifi_bssid, 0, sizeof(conf.wifi_bssid));    
+    memset(conf.bssid, 0, 18);    
   }
 
-  rlog_i("info Setup", "bssid = %s wifi_bssid = %s", conf.bssid, getBssidToString(conf.wifi_bssid).c_str());
-  rlog_i("info Setup", "_bssid = %s _bssid_set = %s conf.bssid_set=%d", wm.arg_bssid().c_str(), wm.arg_bssid_set().c_str(), conf.bssid_set);
+  rlog_i("save Setup", "arg_password=%s chip_password=%s", wm.arg_password(), wm.getWiFiPass().c_str());
+  rlog_i("save Setup", "bssid = %s wifi_bssid = %s", conf.bssid, getBssidToString(conf.wifi_bssid).c_str());
+  rlog_i("save Setup", "_bssid = %s _bssid_set = %s conf.bssid_set=%d", wm.arg_bssid().c_str(), wm.arg_bssid_set().c_str(), conf.bssid_set);
 
   strncpy0(conf.url, param_kodi_url.getValue(), KODI_HOST_LEN);
   strncpy0(conf.MAC, param_kodi_mac.getValue(), 18);
@@ -148,8 +175,11 @@ void startAP(BoardConfig &conf) {
   if (conf.ip) {
     conf.gateway = param_gateway.getValue();
     conf.mask = param_mask.getValue();
+    conf.dns = param_dns.getValue();
   }
   conf.wifi_phy_mode = dropdown_phy_mode.getValue();
+  conf.wifi_channel = dropdown_channel.getValue();
+  rlog_i("save Setup", "ip=%s gw=%s mask=%s dns=%s mode=%d channel=%d", IPAddress(conf.ip).toString().c_str(), IPAddress(conf.gateway).toString().c_str(), IPAddress(conf.mask).toString().c_str(), IPAddress(conf.dns).toString().c_str(), conf.wifi_phy_mode, conf.wifi_channel);
 
   if (shouldSaveConfig) {
     storeConfig(conf);
