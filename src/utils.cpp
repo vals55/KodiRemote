@@ -26,7 +26,7 @@ uint16_t getCRC(const BoardConfig &conf) {
 }
 
 String getDeviceName() {
-	String deviceName = String(BRAND_NAME) + "-" + ESP.getChipId();
+	String deviceName = String(BRAND_NAME) + "-" + int2String(ESP.getChipId(), HEX);
 	return deviceName;
 }
 
@@ -40,13 +40,13 @@ void removeSlash(String &str) {
 	}
 }
 
-String getMacAddressHex() {
-	uint8_t baseMac[6];
-	char baseMacChr[13] = {0};
-	WiFi.macAddress(baseMac);
-	sprintf(baseMacChr, MAC_STR_HEX, baseMac[0], baseMac[1], baseMac[2], baseMac[3], baseMac[4], baseMac[5]);
-	return String(baseMacChr);
-}
+// String getMacAddressHex() {
+// 	uint8_t baseMac[6];
+// 	char baseMacChr[13] = {0};
+// 	WiFi.macAddress(baseMac);
+// 	sprintf(baseMacChr, MAC_STR_HEX, baseMac[0], baseMac[1], baseMac[2], baseMac[3], baseMac[4], baseMac[5]);
+// 	return String(baseMacChr);
+// }
 
 uint8_t hexToByte(const char *hex) {
 	return (uint8_t)strtol(hex, NULL, 16);
@@ -62,9 +62,9 @@ void hexStringToBytes(const char* hexString, uint8_t* byteArray, int arraySize) 
     }
 }
 
-String getBssidToString(uint8_t* bssid) {
+String binMacToHexString(uint8_t* mac) {
 	char baseMacChr[18] = {0};
-	sprintf(baseMacChr, MAC_STR, bssid[0], bssid[1], bssid[2], bssid[3], bssid[4], bssid[5]);
+	sprintf(baseMacChr, MAC_STR, mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 	return String(baseMacChr);
 }
 
@@ -91,7 +91,7 @@ String int2String(uint64_t input, uint8_t base) {
 	} while (input);
 	return result;
 }
-  
+
 //"http://kodi:kodi@192.168.254.10:8080/jsonrpc"
 void getHost(String &url) { 
 	

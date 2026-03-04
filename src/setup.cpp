@@ -53,7 +53,6 @@ void startAP(BoardConfig &conf) {
       }    
       wifi_station_set_config(&sconf);
   }
-rlog_i("info StartAP", "conf.bssid=%s conf.wifi_bssid=%s conf.bssid_set=%d conf.passw=%s", conf.bssid, getBssidToString(conf.wifi_bssid).c_str(), conf.bssid_set, conf.password);
 
   wm.setRemoveDuplicateAPs(false);
 
@@ -138,13 +137,14 @@ rlog_i("info StartAP", "conf.bssid=%s conf.wifi_bssid=%s conf.bssid_set=%d conf.
   
   //wm.setShowPassword(true);
 
-  //bool result = wm.startConfigPortal(getAppName().c_str());
-  // if (!wm.autoConnect(getAppName().c_str())) {
-  if (!wm.startConfigPortal(getAppName().c_str())) {
+  // bool result = wm.startConfigPortal(getAppName().c_str());
+  // rlog_i("Start AP", "result=%d", result);
+
+  if (!wm.autoConnect(getAppName().c_str())) {
+  // if (!result) {
     delay(3000);
     //reset and try again, or maybe put it to deep sleep
-    // ESP.restart();
-    // delay(5000);
+    ESP.restart();
   }
 
 #ifdef WIFI_DEBUG_INFO
@@ -153,7 +153,6 @@ rlog_i("info StartAP", "conf.bssid=%s conf.wifi_bssid=%s conf.bssid_set=%d conf.
     
   strncpy0(conf.ssid, wm.getWiFiSSID().c_str(), SSID_LEN);
   strncpy0(conf.password, wm.getWiFiPass().c_str(), PASSW_LEN);
-//  strncpy0(conf.password, wm.arg_password().c_str(), PASSW_LEN);
   strncpy0(conf.bssid, wm.arg_bssid().c_str(), 18);
   hexStringToBytes(conf.bssid, conf.wifi_bssid, sizeof(conf.wifi_bssid));
   if(wm.arg_bssid_set() == "1") {
@@ -163,10 +162,6 @@ rlog_i("info StartAP", "conf.bssid=%s conf.wifi_bssid=%s conf.bssid_set=%d conf.
     memset(conf.wifi_bssid, 0, sizeof(conf.wifi_bssid));    
     memset(conf.bssid, 0, 18);    
   }
-
-  rlog_i("save Setup", "arg_password=%s chip_password=%s", wm.arg_password(), wm.getWiFiPass().c_str());
-  rlog_i("save Setup", "bssid = %s wifi_bssid = %s", conf.bssid, getBssidToString(conf.wifi_bssid).c_str());
-  rlog_i("save Setup", "_bssid = %s _bssid_set = %s conf.bssid_set=%d", wm.arg_bssid().c_str(), wm.arg_bssid_set().c_str(), conf.bssid_set);
 
   strncpy0(conf.url, param_kodi_url.getValue(), KODI_HOST_LEN);
   strncpy0(conf.MAC, param_kodi_mac.getValue(), 18);
